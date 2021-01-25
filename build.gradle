@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     compile group: 'cglib', name: 'cglib', version: '2.2.2'
+    compile group: 'org.javatuples', name: 'javatuples', version: '1.2'
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.4.2', 'org.projectlombok:lombok:1.18.16')
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2', 'org.projectlombok:lombok:1.18.16')
     testCompileOnly ('org.projectlombok:lombok:1.18.16')

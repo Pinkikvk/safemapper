@@ -2,19 +2,24 @@ package io.safemapper.mapper;
 
 import io.safemapper.configuration.MapperConfiguration;
 
-public class Mapper<S,T> {
+import java.util.List;
 
-    private final MapperConfiguration<S,T> configuration;
+public class Mapper<TSource,TTarget> {
 
-    public Mapper(MapperConfiguration<S,T> configuration) {
-        this.configuration = configuration;
+    private final List<FieldMapper<TSource, TTarget>> fieldMappers;
+
+    public Mapper(List<FieldMapper<TSource, TTarget>> fieldMappers) {
+        this.fieldMappers = fieldMappers;
     }
 
-    public T map(S source) {
+    public TTarget map(TSource source) {
         return null;
     }
 
-    public T map(S source, T target) {
+    public TTarget map(TSource source, TTarget target) {
+        fieldMappers.stream()
+                .forEach(m -> m.execute(source, target));
+
         return target;
     }
 
