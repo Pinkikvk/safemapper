@@ -5,9 +5,7 @@ import io.safemapper.model.PersonDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-
-public class MapperConfigurationTest {
+public class MappingConfigurationTest {
 
     @Test
     void foo() {
@@ -16,7 +14,7 @@ public class MapperConfigurationTest {
         person.setFirstName("Jakub");
         person.setLastName("Krawczyk");
 
-        var mapper = MapperConfiguration.create(Person.class, PersonDto.class)
+        var mapper = MappingConfiguration.create(Person.class, PersonDto.class)
                 .ignore(PersonDto::setLastName)
                 .addMapping(PersonDto::setFirstName, Person::getFirstName)
                 .addMapping(PersonDto::setAge, Person::getAge)

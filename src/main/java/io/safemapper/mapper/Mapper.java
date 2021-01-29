@@ -1,7 +1,5 @@
 package io.safemapper.mapper;
 
-import io.safemapper.configuration.MapperConfiguration;
-
 import java.util.List;
 
 public class Mapper<TSource,TTarget> {
