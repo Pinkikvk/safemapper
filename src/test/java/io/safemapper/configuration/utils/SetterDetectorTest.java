@@ -23,10 +23,12 @@ public class SetterDetectorTest {
     public void findValueTypeSetter() throws NoSuchMethodException {
         var setterDetector = new SetterDetector<>(TestClass.class);
         BiConsumer<TestClass, Integer> setterLambda = TestClass::setInt;
+
         var setterMethod = TestClass.class.getMethod("setInt", int.class);
 
         var detectedSetterMethod = setterDetector.matchSetter(setterLambda).get();
 
         Assertions.assertEquals(setterMethod, detectedSetterMethod);
     }
+
 }
