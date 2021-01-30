@@ -5,12 +5,12 @@ import io.safemapper.mapper.FieldMapper;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class BasicFieldMappingConfiguration<TSource, TTarget, U> implements FieldMappingConfiguration<TSource, TTarget> {
+public class BasicFieldMappingConfiguration<TSource, TTarget, TParameter> implements FieldMappingConfiguration<TSource, TTarget> {
 
-    private final BiConsumer<TTarget,U> setter;
-    private final Function<TSource,U> getter;
+    private final BiConsumer<TTarget, TParameter> setter;
+    private final Function<TSource, TParameter> getter;
 
-    public BasicFieldMappingConfiguration(BiConsumer<TTarget,U> setter, Function<TSource,U> getter) {
+    public BasicFieldMappingConfiguration(BiConsumer<TTarget, TParameter> setter, Function<TSource, TParameter> getter) {
         this.setter = setter;
         this.getter = getter;
     }
@@ -22,5 +22,10 @@ public class BasicFieldMappingConfiguration<TSource, TTarget, U> implements Fiel
         };
 
         return new FieldMapper<>(fieldMapperLambda);
+    }
+
+    @Override
+    public BiConsumer<TTarget, ?> getSetter() {
+        return this.setter;
     }
 }

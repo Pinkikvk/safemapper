@@ -1,7 +1,8 @@
 package io.safemapper.configuration;
 
-import io.safemapper.configuration.utils.MethodsHelper;
+import io.safemapper.configuration.builder.MapperBuilder;
 import io.safemapper.configuration.utils.SetterDetector;
+import io.safemapper.exception.MapperException;
 import io.safemapper.mapper.FieldMapper;
 import io.safemapper.mapper.Mapper;
 
@@ -13,16 +14,16 @@ import java.util.stream.Collectors;
 
 public class MappingConfiguration<TSource, TTarget> {
     private final Class<TSource> sourceClass;
-    private final Class<TTarget> destinationClass;
-    private final SetterDetector<TTarget> setterDetector;
-    private final MethodsHelper<TTarget> methodsHelper;
+    private final Class<TTarget> targetClass;
     private final List<FieldMappingConfiguration<TSource, TTarget>> fieldMappingConfigurations = new LinkedList<>();
+    private final SetterDetector<TTarget> setterDetector;
 
-    private MappingConfiguration(Class<TSource> sourceClass, Class<TTarget> destinationClass) {
+    private boolean areMissingFieldsAllowed = false;
+
+    private MappingConfiguration(Class<TSource> sourceClass, Class<TTarget> targetClass) {
         this.sourceClass = sourceClass;
-        this.destinationClass = destinationClass;
-        setterDetector = new SetterDetector<>(destinationClass);
-        methodsHelper = new MethodsHelper<>(destinationClass);
+        this.targetClass = targetClass;
+        this.setterDetector = new SetterDetector<>(targetClass);
     }
 
     public static <TSource,TTarget> MappingConfiguration<TSource,TTarget> create(Class<TSource> sourceClass, Class<TTarget> destinationClass) {
@@ -30,16 +31,12 @@ public class MappingConfiguration<TSource, TTarget> {
     }
 
     public Mapper<TSource, TTarget> build() {
-        List<FieldMapper<TSource, TTarget>> fieldMappers = fieldMappingConfigurations
-                .stream()
-                .map(FieldMappingConfiguration::build)
-                .collect(Collectors.toList());
-
-        return new Mapper<>(fieldMappers);
+        var mapperBuilder = MapperBuilder.of(this);
+        return mapperBuilder.build();
     }
 
     public <W> MappingConfiguration<TSource, TTarget> ignore(BiConsumer<TTarget,W> setter) {
-        var fieldMappingConfiguration = new IgnoreFieldMappingConfiguration<TSource, TTarget>();
+        var fieldMappingConfiguration = new IgnoreFieldMappingConfiguration<TSource, TTarget>(setter);
         addMappingConfiguration(fieldMappingConfiguration);
         return this;
     }
@@ -56,7 +53,33 @@ public class MappingConfiguration<TSource, TTarget> {
         return this;
     }
 
+    public List<FieldMappingConfiguration<TSource, TTarget>> getFieldMappingConfigurations() {
+        return fieldMappingConfigurations;
+    }
+
+    public Class<TSource> getSourceClass() {
+        return this.sourceClass;
+    }
+
+    public Class<TTarget> getTargetClass() {
+        return this.targetClass;
+    }
+
+    public MappingConfiguration<TSource, TTarget> missingFieldsAllowed() {
+        this.areMissingFieldsAllowed = true;
+        return this;
+    }
+
+    public boolean areMissingFieldsAllowed() {
+        return this.areMissingFieldsAllowed;
+    }
+
     private void addMappingConfiguration(FieldMappingConfiguration<TSource, TTarget> fieldMappingConfiguration) {
+        var setterLambda = fieldMappingConfiguration.getSetter();
+        setterDetector.matchSetter(setterLambda).orElseThrow(() ->
+            new MapperException(String.format("Provided setter lambda not recognized as %s method", targetClass.getSimpleName()))
+        );
+
         fieldMappingConfigurations.add(fieldMappingConfiguration);
     }
 }

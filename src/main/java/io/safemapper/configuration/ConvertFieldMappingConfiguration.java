@@ -28,4 +28,9 @@ class ConvertFieldMappingConfiguration<TSource, TTarget, TSourceParameter, TTarg
 
         return new FieldMapper<>(fieldMapperLambda);
     }
+
+    @Override
+    public BiConsumer<TTarget, ?> getSetter() {
+        return this.setter;
+    }
 }

@@ -8,6 +8,7 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public class SetterDetector<T> {
@@ -39,16 +40,16 @@ public class SetterDetector<T> {
         }
     }
 
-    public <U> Method matchSetter(BiConsumer<T, U> lambda) {
+    public <U> Optional<Method> matchSetter(BiConsumer<T, U> lambda) {
         var executedMethods = new LinkedList<Method>();
 
         T enhancer = buildEnhancer(executedMethods);
         runLambdaUsingEnhancer(lambda, enhancer);
 
         if (executedMethods.size() == 1) {
-            return executedMethods.get(0);
+            return Optional.of(executedMethods.get(0));
         }
 
-        return null;
+        return Optional.empty();
     }
 }
