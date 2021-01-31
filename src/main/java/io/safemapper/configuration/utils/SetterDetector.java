@@ -33,6 +33,19 @@ public class SetterDetector<T> {
         this.targetClass = targetClass;
     }
 
+    public Optional<Method> findSetterMethod(BiConsumer<T, ?> lambda) {
+        var interceptor = new GeneralInterceptor();
+
+        T enhancer = buildEnhancer(interceptor);
+        runLambdaUsingEnhancer(lambda, enhancer);
+
+        if (interceptor.executedMethods.size() == 1) {
+            return Optional.of(interceptor.executedMethods.get(0));
+        }
+
+        return Optional.empty();
+    }
+
     private T buildEnhancer(GeneralInterceptor interceptor) {
         try {
             return new ByteBuddy()
@@ -53,19 +66,6 @@ public class SetterDetector<T> {
         Object defaultArgumentValue = getDefaultArgumentValue(lambda);
         BiConsumer<T, Object> castedLambda = (BiConsumer<T, Object>) lambda;
         castedLambda.accept(enhancer, defaultArgumentValue);
-    }
-
-    public <U> Optional<Method> matchSetter(BiConsumer<T, U> lambda) {
-        var interceptor = new GeneralInterceptor();
-
-        T enhancer = buildEnhancer(interceptor);
-        runLambdaUsingEnhancer(lambda, enhancer);
-
-        if (interceptor.executedMethods.size() == 1) {
-            return Optional.of(interceptor.executedMethods.get(0));
-        }
-
-        return Optional.empty();
     }
 
     private Object getDefaultArgumentValue(BiConsumer<T, ?> lambda) {

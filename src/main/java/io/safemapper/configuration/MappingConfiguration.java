@@ -3,14 +3,12 @@ package io.safemapper.configuration;
 import io.safemapper.configuration.builder.MapperBuilder;
 import io.safemapper.configuration.utils.SetterDetector;
 import io.safemapper.exception.MapperException;
-import io.safemapper.mapper.FieldMapper;
 import io.safemapper.mapper.Mapper;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class MappingConfiguration<TSource, TTarget> {
     private final Class<TSource> sourceClass;
@@ -76,7 +74,7 @@ public class MappingConfiguration<TSource, TTarget> {
 
     private void addMappingConfiguration(FieldMappingConfiguration<TSource, TTarget> fieldMappingConfiguration) {
         var setterLambda = fieldMappingConfiguration.getSetter();
-        setterDetector.matchSetter(setterLambda).orElseThrow(() ->
+        setterDetector.findSetterMethod(setterLambda).orElseThrow(() ->
             new MapperException(String.format("Provided setter lambda not recognized as %s method", targetClass.getSimpleName()))
         );
 

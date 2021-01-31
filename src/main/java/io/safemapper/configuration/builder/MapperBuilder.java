@@ -10,7 +10,6 @@ import io.safemapper.mapper.Mapper;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MapperBuilder<TSource, TTarget> {
@@ -60,7 +59,7 @@ public class MapperBuilder<TSource, TTarget> {
                                          FieldMappingConfiguration<TSource, TTarget> fieldMappingConfiguration) {
 
         var setterLambda = fieldMappingConfiguration.getSetter();
-        Method setter = setterDetector.matchSetter(setterLambda)
+        Method setter = setterDetector.findSetterMethod(setterLambda)
                 .orElseThrow(() -> new MapperException("Cannot find setter for provided lambda"));
 
         if (!fieldMap.containsKey(setter)) {

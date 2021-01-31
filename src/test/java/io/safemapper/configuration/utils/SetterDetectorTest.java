@@ -14,7 +14,7 @@ public class SetterDetectorTest {
         BiConsumer<TestClass, String> setterLambda = TestClass::setString;
         var setterMethod = TestClass.class.getMethod("setString", String.class);
 
-        var detectedSetterMethod = setterDetector.matchSetter(setterLambda).get();
+        var detectedSetterMethod = setterDetector.findSetterMethod(setterLambda).get();
 
         Assertions.assertEquals(setterMethod, detectedSetterMethod);
     }
@@ -26,7 +26,7 @@ public class SetterDetectorTest {
 
         var setterMethod = TestClass.class.getMethod("setInt", int.class);
 
-        var detectedSetterMethod = setterDetector.matchSetter(setterLambda).get();
+        var detectedSetterMethod = setterDetector.findSetterMethod(setterLambda).get();
 
         Assertions.assertEquals(setterMethod, detectedSetterMethod);
     }
