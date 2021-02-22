@@ -1,6 +1,10 @@
 package io.safemapper.configuration;
 
 import io.safemapper.configuration.builder.MapperBuilder;
+import io.safemapper.configuration.field.BasicFieldMappingConfiguration;
+import io.safemapper.configuration.field.ConvertFieldMappingConfiguration;
+import io.safemapper.configuration.field.FieldMappingConfiguration;
+import io.safemapper.configuration.field.IgnoreFieldMappingConfiguration;
 import io.safemapper.configuration.utils.SetterDetector;
 import io.safemapper.exception.MapperException;
 import io.safemapper.mapper.Mapper;

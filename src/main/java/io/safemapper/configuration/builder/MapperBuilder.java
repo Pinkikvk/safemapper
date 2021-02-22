@@ -1,6 +1,6 @@
 package io.safemapper.configuration.builder;
 
-import io.safemapper.configuration.FieldMappingConfiguration;
+import io.safemapper.configuration.field.FieldMappingConfiguration;
 import io.safemapper.configuration.MappingConfiguration;
 import io.safemapper.configuration.utils.MethodsHelper;
 import io.safemapper.configuration.utils.SetterDetector;

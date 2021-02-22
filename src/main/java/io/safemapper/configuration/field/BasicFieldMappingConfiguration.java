@@ -1,4 +1,4 @@
-package io.safemapper.configuration;
+package io.safemapper.configuration.field;
 
 import io.safemapper.mapper.FieldMapper;
 
