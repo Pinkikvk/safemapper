@@ -8,6 +8,8 @@ import io.safemapper.configuration.field.IgnoreFieldMappingConfiguration;
 import io.safemapper.configuration.utils.SetterDetector;
 import io.safemapper.exception.MapperException;
 import io.safemapper.mapper.Mapper;
+import io.safemapper.model.Getter;
+import io.safemapper.model.Setter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,19 +39,19 @@ public class MappingConfiguration<TSource, TTarget> {
         return mapperBuilder.build();
     }
 
-    public <W> MappingConfiguration<TSource, TTarget> ignore(BiConsumer<TTarget,W> setter) {
+    public <W> MappingConfiguration<TSource, TTarget> ignore(Setter<TTarget,W> setter) {
         var fieldMappingConfiguration = new IgnoreFieldMappingConfiguration<TSource, TTarget>(setter);
         addMappingConfiguration(fieldMappingConfiguration);
         return this;
     }
 
-    public <W> MappingConfiguration<TSource, TTarget> addMapping(BiConsumer<TTarget,W> setter, Function<TSource,W> getter) {
+    public <W> MappingConfiguration<TSource, TTarget> addMapping(Setter<TTarget,W> setter, Getter<TSource,W> getter) {
         var fieldMappingConfiguration = new BasicFieldMappingConfiguration<>(setter, getter);
         addMappingConfiguration(fieldMappingConfiguration);
         return this;
     }
 
-    public <W,X> MappingConfiguration<TSource, TTarget> addMapping(BiConsumer<TTarget,W> setter, Function<TSource,X> getter, Function<X,W> converter) {
+    public <W,X> MappingConfiguration<TSource, TTarget> addMapping(Setter<TTarget,W> setter, Getter<TSource,X> getter, Function<X,W> converter) {
         var fieldMappingConfiguration = new ConvertFieldMappingConfiguration<>(setter, getter, converter);
         addMappingConfiguration(fieldMappingConfiguration);
         return this;

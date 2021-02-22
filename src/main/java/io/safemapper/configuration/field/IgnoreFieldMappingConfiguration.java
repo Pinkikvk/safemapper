@@ -1,14 +1,15 @@
 package io.safemapper.configuration.field;
 
 import io.safemapper.mapper.FieldMapper;
+import io.safemapper.model.Setter;
 
 import java.util.function.BiConsumer;
 
-class IgnoreFieldMappingConfiguration<TSource, TTarget> implements FieldMappingConfiguration<TSource, TTarget> {
+public class IgnoreFieldMappingConfiguration<TSource, TTarget> implements FieldMappingConfiguration<TSource, TTarget> {
 
-    private final BiConsumer<TTarget,?> setter;
+    private final Setter<TTarget,?> setter;
 
-    public IgnoreFieldMappingConfiguration(BiConsumer<TTarget,?> setter) {
+    public IgnoreFieldMappingConfiguration(Setter<TTarget,?> setter) {
         this.setter = setter;
     }
 
@@ -19,7 +20,7 @@ class IgnoreFieldMappingConfiguration<TSource, TTarget> implements FieldMappingC
     }
 
     @Override
-    public BiConsumer<TTarget, ?> getSetter() {
+    public Setter<TTarget, ?> getSetter() {
         return this.setter;
     }
 }

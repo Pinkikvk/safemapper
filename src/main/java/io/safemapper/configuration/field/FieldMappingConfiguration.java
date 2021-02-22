@@ -1,11 +1,10 @@
 package io.safemapper.configuration.field;
 
 import io.safemapper.mapper.FieldMapper;
-
-import java.util.function.BiConsumer;
+import io.safemapper.model.Setter;
 
 public interface FieldMappingConfiguration<TSource, TTarget> {
     FieldMapper<TSource, TTarget> build();
 
-    BiConsumer<TTarget, ?> getSetter();
+    Setter<TTarget, ?> getSetter();
 }

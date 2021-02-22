@@ -1,5 +1,6 @@
 package io.safemapper.configuration.utils;
 
+import io.safemapper.model.Setter;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.implementation.MethodDelegation;
@@ -33,7 +34,7 @@ public class SetterDetector<T> {
         this.targetClass = targetClass;
     }
 
-    public Optional<Method> findSetterMethod(BiConsumer<T, ?> lambda) {
+    public Optional<Method> findSetterMethod(Setter<T, ?> lambda) {
         var interceptor = new GeneralInterceptor();
 
         T enhancer = buildEnhancer(interceptor);
@@ -62,13 +63,13 @@ public class SetterDetector<T> {
         }
     }
 
-    private void runLambdaUsingEnhancer(BiConsumer<T, ?> lambda, T enhancer) {
+    private void runLambdaUsingEnhancer(Setter<T, ?> lambda, T enhancer) {
         Object defaultArgumentValue = getDefaultArgumentValue(lambda);
-        BiConsumer<T, Object> castedLambda = (BiConsumer<T, Object>) lambda;
-        castedLambda.accept(enhancer, defaultArgumentValue);
+        Setter<T, Object> castedLambda = (Setter<T, Object>) lambda;
+        castedLambda.set(enhancer, defaultArgumentValue);
     }
 
-    private Object getDefaultArgumentValue(BiConsumer<T, ?> lambda) {
+    private Object getDefaultArgumentValue(Setter<T, ?> lambda) {
         Class<?>[] typeArgs = TypeResolver.resolveRawArguments(BiConsumer.class, lambda.getClass());
 
         //When setter is assigned to BiConsumer, and setter argument type is primitive, it is boxed
